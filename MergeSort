@@ -1,0 +1,49 @@
+import time
+num_linhas = 1500
+
+# Chamando o MergeSort para organizar a lista
+def merge_sort(lista):
+    if len(lista) <= 1:
+        return lista
+    meio = len(lista) // 2
+    lista_esquerda = lista[:meio]
+    lista_direita = lista[meio:]
+    lista_esquerda_ordenada = merge_sort(lista_esquerda)
+    lista_direita_ordenada = merge_sort(lista_direita)
+    return merge(lista_esquerda_ordenada, lista_direita_ordenada)
+
+def merge(lista_esquerda, lista_direita):
+    i, j = 0, 0
+    resultado = []
+    while i < len(lista_esquerda) and j < len(lista_direita):
+        if lista_esquerda[i] < lista_direita[j]:
+            resultado.append(lista_esquerda[i])
+            i += 1
+        else:
+            resultado.append(lista_direita[j])
+            j += 1
+    resultado += lista_esquerda[i:]
+    resultado += lista_direita[j:]
+    return resultado
+
+# Tenta começar o cronometro e ordenar a lista
+try:
+    começar_cronometro = time.time()
+    with open('rockyou.txt', "r", encoding="latin-1") as arquivo:
+        linhas = [linha.strip() for linha in arquivo.readlines()[:num_linhas]]
+        linhas_ordenadas = merge_sort(linhas)
+        for linha in linhas_ordenadas:
+            print(linha)
+    finalizar_cronometro = time.time()
+
+    tempo_total = finalizar_cronometro - começar_cronometro
+
+    print("O tempo de execução foi de {:.2f} segundos.".format(tempo_total))
+
+# Caso não consiga
+except FileNotFoundError:
+    print("Arquivo não encontrado.")
+except UnicodeDecodeError:
+    print("Não foi possível decodificar o arquivo.") 
+except Exception as e:
+    print("Ocorreu um erro", e)
